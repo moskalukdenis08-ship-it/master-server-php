@@ -10,6 +10,37 @@ app.use(cors());
 const BIN_ID = "6919d96dd0ea881f40ec140f";
 const API_KEY = process.env.JSONBIN_API_KEY;
 
+app.get("/ping", async (req, res) => {
+    try {
+        const getReq = await axios.get(
+            `https://api.jsonbin.io/v3/b/${BIN_ID}/latest`,
+            { headers: { "X-Master-Key": JSONBIN_KEY } }
+        );
+
+        let servers = getReq.data.record.servers || [];
+
+        const now = Date.now();
+        const TIMEOUT = 3 * 60 * 1000; // 3 хвилини
+
+        // Очищаємо застарілі
+        servers = servers.filter(s => now - s.lastPing <= TIMEOUT);
+
+        // Записуємо назад у JSONBin
+        await axios.put(
+            `https://api.jsonbin.io/v3/b/${BIN_ID}`,
+            { servers },
+            { headers: { "X-Master-Key": JSONBIN_KEY } }
+        );
+
+        // 🔥 КЛІЄНТУ НІЧОГО НЕ ПОВЕРТАЄМО, крім статусу
+        res.json({ ok: true });
+
+    } catch (err) {
+        res.json({ ok: false, error: err.message });
+    }
+});
+
+
 app.post("/add", async (req, res) => {
     try {
         // Отримуємо дані з JSONBin
@@ -24,6 +55,10 @@ app.post("/add", async (req, res) => {
         if(servers.find(s => s.ip === req.body.ip && s.port === req.body.port))
         {
             return res.json({ ok: false, error: "Server already exists" });
+        }
+        if(servers.find(s => s.name === req.body.name))
+        {
+            return res.json({ ok: false, error: "Server with that name already exists"});
         }
         
         // Додаємо новий сервер
@@ -40,6 +75,8 @@ app.post("/add", async (req, res) => {
         }
     }
 );
+
+        
 
 
         res.json({ ok: true });
