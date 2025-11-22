@@ -64,6 +64,9 @@ app.post("/add", async (req, res) => {
         }
 
         req.body.lastPing = Date.now();
+        if (req.body.players !== undefined) {
+            srv.players = req.body.players;
+        }
         
         // Додаємо новий сервер
         servers.push(req.body);
