@@ -22,7 +22,12 @@ app.get("/ping", async (req, res) => {
         const now = Date.now();
         const TIMEOUT = 3 * 60 * 1000;
 
-        servers = servers.filter(s => now - s.lastPing <= TIMEOUT);
+        servers = servers.filter(s => {
+        if (s.lastPing === undefined) return true; // 🔥 не видаляємо тестові сервери
+
+        return now - s.lastPing <= TIMEOUT;
+        });
+
 
         await axios.put(
             `https://api.jsonbin.io/v3/b/${BIN_ID}`,
