@@ -13,7 +13,7 @@ const API_KEY = process.env.JSONBIN_API_KEY;
 app.post("/add", async (req, res) => {
     try {
         const getResp = await axios.get(
-            `https://api.jsonbin.io/v3/b/${BIN_ID}/latest`,
+            `https://api.jsonbin.io/v3/b/${BIN_ID}`,
             {
                 headers: { "X-Master-Key": API_KEY }
             }
