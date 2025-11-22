@@ -14,25 +14,22 @@ app.get("/ping", async (req, res) => {
     try {
         const getReq = await axios.get(
             `https://api.jsonbin.io/v3/b/${BIN_ID}/latest`,
-            { headers: { "X-Master-Key": JSONBIN_KEY } }
+            { headers: { "X-Master-Key": API_KEY } }   // ← тут виправлено
         );
 
         let servers = getReq.data.record.servers || [];
 
         const now = Date.now();
-        const TIMEOUT = 3 * 60 * 1000; // 3 хвилини
+        const TIMEOUT = 3 * 60 * 1000;
 
-        // Очищаємо застарілі
         servers = servers.filter(s => now - s.lastPing <= TIMEOUT);
 
-        // Записуємо назад у JSONBin
         await axios.put(
             `https://api.jsonbin.io/v3/b/${BIN_ID}`,
             { servers },
-            { headers: { "X-Master-Key": JSONBIN_KEY } }
+            { headers: { "X-Master-Key": API_KEY } }   // ← тут виправлено
         );
 
-        // 🔥 КЛІЄНТУ НІЧОГО НЕ ПОВЕРТАЄМО, крім статусу
         res.json({ ok: true });
 
     } catch (err) {
