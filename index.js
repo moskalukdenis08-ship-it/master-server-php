@@ -24,6 +24,11 @@ app.post("/add", async (req, res) => {
         // Додаємо новий сервер
         servers.push(req.body);
 
+        if(servers.find(s => s.ip === req.body.ip && s.port === req.body.port))
+        {
+            return res.json({ ok: false, error: "Server already exists" });
+        }
+        
         // Записуємо назад у JSONBin без додаткового record
         await axios.put(
     `https://api.jsonbin.io/v3/b/${BIN_ID}`,
