@@ -7,7 +7,7 @@ app.use(express.json());
 app.use(cors());
 
 // Ключі з Render Environment
-const BIN_ID = process.env.JSONBIN_BIN_ID;
+const BIN_ID = "6919d96dd0ea881f40ec140f";
 const API_KEY = process.env.JSONBIN_API_KEY;
 
 app.post("/add", async (req, res) => {
