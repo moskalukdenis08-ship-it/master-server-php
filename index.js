@@ -57,6 +57,8 @@ app.post("/add", async (req, res) => {
         {
             return res.json({ ok: false, error: "Server with that name already exists"});
         }
+
+        req.body.lastPing = Date.now();
         
         // Додаємо новий сервер
         servers.push(req.body);
