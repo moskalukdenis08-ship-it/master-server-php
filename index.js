@@ -13,21 +13,27 @@ app.post("/add", async (req, res) => {
     try {
         // Отримуємо поточні дані
         const getResp = await axios.get(
-            `https://api.jsonbin.io/v3/b/${BIN_ID}/latest`,
-            { headers: { "X-Master-Key": API_KEY } }
-        );
+  `https://api.jsonbin.io/v3/b/${BIN_ID}`,
+  { headers: { "X-Master-Key": API_KEY } }
+);
 
-        // Якщо servers не існує — створюємо масив
-        let servers = getResp.data.record.servers || [];
+let servers = getResp.data.record.servers || [];
 
-        servers.push(req.body);
+// Додаємо новий сервер
+servers.push(req.body);
 
-        // Записуємо назад
-        await axios.put(
-            `https://api.jsonbin.io/v3/b/${BIN_ID}`,
-            { record: { servers } },
-            { headers: { "X-Master-Key": API_KEY, "Content-Type": "application/json" } }
-        );
+// Записуємо назад **тільки масив servers у record**, не обгортка record всередині record
+await axios.put(
+  `https://api.jsonbin.io/v3/b/${BIN_ID}`,
+  { record: { servers } },
+  {
+    headers: {
+      "X-Master-Key": API_KEY,
+      "Content-Type": "application/json"
+    }
+  }
+);
+
 
         res.json({ ok: true });
 
