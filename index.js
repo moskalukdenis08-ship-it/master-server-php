@@ -26,10 +26,16 @@ app.post("/add", async (req, res) => {
 
         // Записуємо назад у JSONBin без додаткового record
         await axios.put(
-            `https://api.jsonbin.io/v3/b/${BIN_ID}`,
-            servers, // <-- передаємо **масив напряму**
-            { headers: { "X-Master-Key": API_KEY, "Content-Type": "application/json" } }
-        );
+    `https://api.jsonbin.io/v3/b/${BIN_ID}`,
+    { servers }, // обов'язково об’єкт з ключем "servers"
+    {
+        headers: {
+            "X-Master-Key": API_KEY,
+            "Content-Type": "application/json"
+        }
+    }
+);
+
 
         res.json({ ok: true });
 
