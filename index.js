@@ -24,7 +24,7 @@ app.post("/add", async (req, res) => {
         servers.push(req.body);
 
         await axios.put(
-    `https://api.jsonbin.io/v3/b/${BIN_ID}/`,
+    `https://api.jsonbin.io/v3/b/${BIN_ID}`,
     {
         record: { servers }  // <-- обов’язково вкладати в record
     },
