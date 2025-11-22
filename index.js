@@ -24,15 +24,18 @@ app.post("/add", async (req, res) => {
         servers.push(req.body);
 
         await axios.put(
-            `https://api.jsonbin.io/v3/b/${BIN_ID}`,
-            { servers },
-            {
-                headers: {
-                    "X-Master-Key": API_KEY,
-                    "Content-Type": "application/json"
-                }
-            }
-        );
+    `https://api.jsonbin.io/v3/b/${BIN_ID}/latest`,
+    {
+        record: { servers }  // <-- обов’язково вкладати в record
+    },
+    {
+        headers: {
+            "X-Master-Key": API_KEY,
+            "Content-Type": "application/json"
+        }
+    }
+);
+
 
         res.json({ ok: true });
 
