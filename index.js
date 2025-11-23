@@ -10,6 +10,41 @@ app.use(cors());
 const BIN_ID = "6919d96dd0ea881f40ec140f";
 const API_KEY = process.env.JSONBIN_API_KEY;
 
+app.post("/ping", async (req, res) => {
+    try {
+        const { ip, port, players } = req.body;
+
+        const getResp = await axios.get(
+            `https://api.jsonbin.io/v3/b/${BIN_ID}/latest`,
+            { headers: { "X-Master-Key": API_KEY } }
+        );
+
+        let servers = getResp.data.record.servers || [];
+
+        const srv = servers.find(s => s.ip === ip && s.port === port);
+
+        if (!srv) {
+            return res.json({ ok: false, error: "Server not found" });
+        }
+
+        srv.lastPing = Date.now();
+        if (players !== undefined) srv.players = players;
+
+        await axios.put(
+            `https://api.jsonbin.io/v3/b/${BIN_ID}`,
+            { servers },
+            { headers: { "X-Master-Key": API_KEY } }
+        );
+
+        res.json({ ok: true });
+
+    } catch (err) {
+        console.error(err.response?.data || err);
+        res.json({ ok: false, error: err.message });
+    }
+});
+
+
 app.get("/ping", async (req, res) => {
     try {
         const getReq = await axios.get(
@@ -64,9 +99,6 @@ app.post("/add", async (req, res) => {
         }
 
         req.body.lastPing = Date.now();
-        if (req.body.players !== undefined) {
-            srv.players = req.body.players;
-        }
         
         // Додаємо новий сервер
         servers.push(req.body);
