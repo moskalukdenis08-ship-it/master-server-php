@@ -55,7 +55,7 @@ app.get("/ping", async (req, res) => {
         let servers = getReq.data.record.servers || [];
 
         const now = Date.now();
-        const TIMEOUT = 3 * 60 * 1000;
+        const TIMEOUT = 10 * 60 * 1000;
 
         servers = servers.filter(s => {
         if (s.lastPing === undefined) return true; // 🔥 не видаляємо тестові сервери
