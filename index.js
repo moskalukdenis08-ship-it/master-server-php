@@ -97,7 +97,23 @@ app.post("/add", async (req, res) => {
         {
             return res.json({ ok: false, error: "Server with that name already exists"});
         }
+        
+ function isLocalIp(ip) {
+    return ip.startsWith("10.") ||
+           ip.startsWith("192.168.") ||
+           ip.startsWith("127.") || // localhost
+           (ip.startsWith("172.") && is172Local(ip));
+}
 
+function is172Local(ip) {
+    const parts = ip.split(".");
+    if (parts.length < 2) return false;
+    const second = Number(parts[1]);
+    return second >= 16 && second <= 31;
+}
+        
+        req.body.isLocal = isLocalIp(req.body.ip);
+        
         req.body.lastPing = Date.now();
         
         // Додаємо новий сервер
@@ -115,6 +131,7 @@ app.post("/add", async (req, res) => {
     }
 );
 
+       
         
 
 
