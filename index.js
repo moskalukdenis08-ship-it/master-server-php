@@ -86,7 +86,6 @@ app.post("/add", async (req, res) => {
             "bitch",
             "nigger",
             "hitler",
-            "admin",
             "root"
         ];
 
