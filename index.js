@@ -85,8 +85,7 @@ app.post("/add", async (req, res) => {
             "shit",
             "bitch",
             "nigger",
-            "hitler",
-            "root"
+            "hitler"
         ];
 
         const nameLower = req.body.name.toLowerCase();
