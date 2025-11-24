@@ -79,11 +79,33 @@ app.get("/ping", async (req, res) => {
 
 
 app.post("/add", async (req, res) => {
-    try {
+    try { 
+        const bannedWords = [
+            "fuck",
+            "shit",
+            "bitch",
+            "nigger",
+            "hitler",
+            "admin",
+            "root"
+        ];
+
+        const nameLower = req.body.name.toLowerCase();
+
+        for (const bad of bannedWords) {
+            if (nameLower.includes(bad)) {
+                return res.json({
+                    ok: false,
+                    error: `Server name contains forbidden word: ${bad}`
+                });
+            }
+        }
+
+        
         // Отримуємо дані з JSONBin
         const getResp = await axios.get(
             `https://api.jsonbin.io/v3/b/${BIN_ID}/latest`,
-            { headers: { "X-Master-Key": API_KEY } }
+            { headers: { "X-Master-Key": API_KEY } }    
         );
 
         // Беремо масив servers з існуючих даних
